@@ -1,4 +1,5 @@
-import bigquery, datetime, json, jwt
+import datetime, json, jwt, flask
+from google.cloud import bigquery
 from aiohttp import web
 
 headers = {
@@ -25,7 +26,7 @@ def login(request):
     # get result
     results = query_job.result()
     if len(list(results)) > 0:
-        authenticate(username, password)
+        return authenticate(username, password)
     else:
         return {'success': False}, 400
 
@@ -47,4 +48,4 @@ def authenticate(username, password):
 def json_response(body='', **kwargs):
     kwargs['body'] = json.dumps(body or kwargs['body']).encode('utf-8')
     kwargs['content_type'] = 'text/json'
-    return {'success': True, 'token': web.Response(**kwargs)}, 200
+    return {'success': True, 'token': flask.jsonify(web.Response(**kwargs))}, 200
