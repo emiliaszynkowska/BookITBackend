@@ -22,6 +22,7 @@ def register(request):
     query_job = client.query(query)
     results = query_job.result()
 
-    return ("User " + username + " has been registered.", 200)
+    return {'success': True}, 200
+
 
 
