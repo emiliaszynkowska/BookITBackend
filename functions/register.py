@@ -25,4 +25,3 @@ def register(request):
     return {'success': True}, 200
 
 
-

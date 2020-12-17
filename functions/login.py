@@ -1,11 +1,15 @@
-import datetime, json, jwt, flask
+import json, jwt, flask
+from datetime import datetime, timedelta
 from google.cloud import bigquery
-from aiohttp import web
 
 headers = {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
 }
+
+JWT_SECRET = 'secret'
+JWT_ALGORITHM = 'HS256'
+JWT_EXP_DELTA_SECONDS = 86400
 
 
 def login(request):
@@ -14,6 +18,18 @@ def login(request):
     username = request_json["username"]
     password = request_json["password"]
 
+    authenticated = authenticate(username, password)
+
+    if not authenticated:
+        return {'success': False, 'message': 'Invalid Credentials'}, 400
+
+    token = gen_token(username)
+    response_body = {'success': True, 'token': token}
+
+    return json.dumps(response_body), 200
+
+
+def authenticate(username, password):
     # connect to bigquery
     client = bigquery.Client()
     table_id = "bookit-297317.dataset.users"
@@ -26,26 +42,18 @@ def login(request):
     # get result
     results = query_job.result()
     if len(list(results)) > 0:
-        return authenticate(username, password)
+        return True
     else:
-        return {'success': False}, 400
+        return False
 
 
-def authenticate(username, password):
-    # Generate token
-    timeLimit = datetime.datetime.utcnow() + datetime.timedelta(minutes=10)
-    payload = {"username": username, "exp": timeLimit}
-    token = jwt.encode(payload, 'secretkey')
-    send_data = {
-        "error": "0",
-        "message": "successful",
-        "token": token.decode("UTF-8"),
-        "elapsed_time": f"{timeLimit}"
+def gen_token(username):
+    payload = {
+        'username': username,
+        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
     }
-    return json_response({'token': token.decode('utf-8')})
 
+    jwt_token = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
+    jwt_token = jwt_token.decode("utf-8")
 
-def json_response(body='', **kwargs):
-    kwargs['body'] = json.dumps(body or kwargs['body']).encode('utf-8')
-    kwargs['content_type'] = 'text/json'
-    return {'success': True, 'token': flask.jsonify(web.Response(**kwargs))}, 200
+    return jwt_token
