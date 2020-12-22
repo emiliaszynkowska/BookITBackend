@@ -1,7 +1,6 @@
 import jwt
 from datetime import datetime, timedelta
 
-
 def gen_token(username):
     payload = {
         'username': username,
