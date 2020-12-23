@@ -30,8 +30,7 @@ def renewbook(request):
         table = client.get_table(table_id)
 
         # remove from loans
-        query = "DELETE FROM `bookit-297317.dataset.loans` (username,id,date) VALUES ('\"{}\"','\"{}\"','\"{}\"')".format(
-            username, id, date)
+        query = """DELETE FROM `bookit-297317.dataset.loans` WHERE username = '%s' AND id = '%s'""" %(username, id)
         query_job = client.query(query)
         results = query_job.result()
 
