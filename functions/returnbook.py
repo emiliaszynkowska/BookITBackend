@@ -1,4 +1,3 @@
-import jwt
 from datetime import datetime, timedelta
 from google.cloud import bigquery
 
@@ -9,22 +8,15 @@ headers = {
 }
 
 
-JWT_SECRET = 'secret'
-JWT_ALGORITHM = 'HS256'
-JWT_EXP_DELTA_SECONDS = 86400
-
-
 # Assuming a return is the opposite of a loan; will remove a loan instead of adding a return
 def returnbook(request):
     # get the request data
     request_json = request.get_json()
     username = request_json["username"]
     id = request_json["id"]
-    token = request_json["token"]
 
     # authenticate request
-    check_token = gen_token(username)
-    if check_token == token and checkuser(username) and checkbook(id) and (checkloan(username, id) == False):
+    if checkuser(username) and checkbook(id) and (checkloan(username, id) == False):
 
         # connect to bigquery
         client = bigquery.Client()
@@ -40,10 +32,10 @@ def returnbook(request):
 
     elif not checkuser(username):
         return {'success': False, 'message': "Invalid Username"}, 400
-    elif checkloan(username, id):
-        return {'success': False, 'message': "Book hasn't been returned"}, 400
     elif not checkbook(id):
         return {'success': False, 'message': "Invalid Book ID"}, 400
+    elif checkloan(username, id):
+        return {'success': False, 'message': "The user hasn't loaned this book yet!"}, 400
     else:
         return {'success': False, 'message': "Invalid Token"}, 400
 
@@ -83,17 +75,6 @@ def checkbook(id):
     else:
         return False
 
-
-def gen_token(username):
-    payload = {
-        'username': username,
-        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
-    }
-
-    jwt_token = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
-    jwt_token = jwt_token.decode("utf-8")
-
-    return jwt_token
 
 def checkloan(username,id):
     # connect to bigquery

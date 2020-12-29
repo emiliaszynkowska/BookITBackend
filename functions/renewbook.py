@@ -1,4 +1,3 @@
-import jwt
 from datetime import datetime, timedelta
 from google.cloud import bigquery
 
@@ -7,35 +6,27 @@ headers = {
     'Content-Type': 'application/json',
 }
 
-JWT_SECRET = 'secret'
-JWT_ALGORITHM = 'HS256'
-JWT_EXP_DELTA_SECONDS = 86400
-
-
 def renewbook(request):
     # get the request data
     request_json = request.get_json()
     username = request_json["username"]
     id = request_json["id"]
-    token = request_json["token"]
-    date = datetime.now().strftime('%Y-%m-%d')
 
     # authenticate request
-    check_token = gen_token(username)
-    if check_token == token and checkuser(username) and checkbook(id) and (checkloan(username, id) == False):
+    if checkuser(username) and checkbook(id) and (checkloan(username, id) == False):
 
         # connect to bigquery
         client = bigquery.Client()
         table_id = "bookit-297317.dataset.loans"
         table = client.get_table(table_id)
 
-        # remove from loans
-        query = """DELETE FROM `bookit-297317.dataset.loans` WHERE username = '%s' AND id = '%s'""" %(username, id)
+        # remove loan
+        query = """DELETE FROM `bookit-297317.dataset.loans` WHERE username = '%s' AND id = '%s'""" % (username, id)
         query_job = client.query(query)
         results = query_job.result()
 
         # write it back to the loans
-        query = "INSERT INTO `bookit-297317.dataset.loans` (username,id,date) VALUES ('\"{}\"','\"{}\"','\"{}\"')".format(username, id, date)
+        query = "INSERT INTO `bookit-297317.dataset.loans` (username,id,date) VALUES ('{}','{}', CURRENT_DATE())".format(username, id)
         query_job = client.query(query)
         results = query_job.result()
 
@@ -46,7 +37,7 @@ def renewbook(request):
     elif not checkbook(id):
         return {'success': False, 'message': "Invalid Book ID"}, 400
     elif not checkloan(username, id):
-        return {'success': False, 'message': "Already Loaned"}, 400
+        return {'success': False, 'message': "The user hasn't loaned this book yet!"}, 400
     else:
         return {'success': False, 'message': "Invalid Token"}, 400
 
@@ -103,15 +94,3 @@ def checkloan(username,id):
         return True
     else:
         return False
-
-
-def gen_token(username):
-    payload = {
-        'username': username,
-        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
-    }
-
-    jwt_token = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
-    jwt_token = jwt_token.decode("utf-8")
-
-    return jwt_token

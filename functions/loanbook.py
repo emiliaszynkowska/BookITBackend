@@ -1,4 +1,3 @@
-import jwt
 from datetime import datetime, timedelta
 from google.cloud import bigquery
 
@@ -7,22 +6,15 @@ headers = {
     'Content-Type': 'application/json',
 }
 
-JWT_SECRET = 'secret'
-JWT_ALGORITHM = 'HS256'
-JWT_EXP_DELTA_SECONDS = 86400
-
 
 def loanbook(request):
     # get the request data
     request_json = request.get_json()
     username = request_json["username"]
     id = request_json["id"]
-    token = request_json["token"]
-    date = datetime.now().strftime('%Y-%m-%d')
 
     # authenticate request
-    check_token = gen_token(username)
-    if check_token == token and checkuser(username) and checkbook(id) and checkloan(username, id) and checklimit(username):
+    if checkuser(username) and checkbook(id) and checkloan(username, id) and checklimit(username):
 
         # connect to bigquery
         client = bigquery.Client()
@@ -30,7 +22,7 @@ def loanbook(request):
         table = client.get_table(table_id)
 
         # write to loans
-        query = "INSERT INTO `bookit-297317.dataset.loans` (username,id,date) VALUES ('\"{}\"','\"{}\"','\"{}\"')".format(username, id, date)
+        query = "INSERT INTO `bookit-297317.dataset.loans` (username,id,date) VALUES ('{}','{}', CURRENT_DATE())".format(username, id)
         query_job = client.query(query)
         results = query_job.result()
 
@@ -118,15 +110,3 @@ def checklimit(username):
         return True
     else:
         return False
-
-
-def gen_token(username):
-    payload = {
-        'username': username,
-        'exp': datetime.utcnow() + timedelta(seconds=JWT_EXP_DELTA_SECONDS)
-    }
-
-    jwt_token = jwt.encode(payload, JWT_SECRET, JWT_ALGORITHM)
-    jwt_token = jwt_token.decode("utf-8")
-
-    return jwt_token
