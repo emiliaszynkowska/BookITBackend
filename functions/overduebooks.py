@@ -15,14 +15,31 @@ def overduebooks(request):
     # authenticate request
     if checkuser(username):
 
-        # connect to bigquery
+        # delete everything from overdue books dataset
+        client = bigquery.Client()
+        table_id = "bookit-297317.dataset.overduebooks"
+        table = client.get_table(table_id)
+
+        query = "DELETE FROM `bookit-297317.dataset.overduebooks` WHERE TRUE"
+        query_job = client.query(query)
+        results = query_job.result()
+
+        # connect to bigquery for loans
         client = bigquery.Client()
         table_id = "bookit-297317.dataset.loans"
         table = client.get_table(table_id)
 
-        query = "SELECT * FROM `bookit-297317.dataset.loans` WHERE username='" + username + "' AND date < DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)"
+        query = "SELECT id FROM `bookit-297317.dataset.loans` WHERE username='" + username + "' AND date < DATE_SUB(CURRENT_DATE(), INTERVAL 30 DAY)"
         query_job = client.query(query)
         results = query_job.result()
+
+        res_list = [x[0] for x in results]
+
+        for x in res_list:
+            query = " INSERT INTO `bookit-297317.dataset.overduebooks` (username, id) VALUES ('{}','{}')".format(username, x)
+            query_job = client.query(query)
+            results = query_job.result()
+
 
         return {'success': True}, 200
 
