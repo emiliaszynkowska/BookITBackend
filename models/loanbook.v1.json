@@ -1,7 +1,7 @@
 {
   "title": "loanbook",
   "type": "object",
-  "description": "Loans Book. Returns: true 200 / false 400\nNote: 'id' is the book id\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/loanbook",
+  "description": "Loans Book. Returns: true 200 / false 400.\nNote: 'id' is the book id.\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/loanbook",
   "x-examples": {
     "example-1": {
       "username": "user",

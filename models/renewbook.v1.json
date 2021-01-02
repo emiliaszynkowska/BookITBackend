@@ -1,7 +1,7 @@
 {
   "title": "renewbook",
   "type": "object",
-  "description": "Extends Loan By 1 Month. Returns: true 200 / false 400\nNote: 'id' is the book id\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/renewbook",
+  "description": "Extends Loan By 1 Month. Returns: true 200 / false 400.\nNote: 'id' is the book id.\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/renewbook",
   "x-examples": {
     "example-1": {
       "username": "user",

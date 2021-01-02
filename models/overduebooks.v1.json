@@ -1,7 +1,7 @@
 {
   "title": "overduebooks",
   "type": "object",
-  "description": "Gets Overdue Books. Returns: true 200 / false 400 + list of books\nNote: all books have an expiry of 1 month\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/overduebooks",
+  "description": "Gets Overdue Books. Returns: true 200 / false 400 + list of books.\nNote: all books have an expiry of 1 month.\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/overduebooks",
   "x-examples": {
     "example-1": {
       "username": "user"

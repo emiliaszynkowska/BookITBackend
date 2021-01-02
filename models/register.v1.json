@@ -7,7 +7,7 @@
       "password": "password"
     }
   },
-  "description": "Add New User. Returns: true 200 / false 400\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/register",
+  "description": "Add New User. Returns: true 200 / false 400.\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/register",
   "properties": {
     "username": {
       "type": "string"

@@ -1,7 +1,7 @@
 {
   "title": "returnbook",
   "type": "object",
-  "description": "Deletes Loan. Returns: true 200 / false 400\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/returnbook",
+  "description": "Deletes Loan. Returns: true 200 / false 400.\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/returnbook",
   "x-examples": {
     "example-1": {
       "username": "user",
