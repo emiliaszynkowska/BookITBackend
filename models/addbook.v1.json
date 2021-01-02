@@ -55,5 +55,9 @@
     "url": {
       "type": "string"
     }
-  }
+  },
+  "required": [
+    "username",
+    "id"
+  ]
 }
