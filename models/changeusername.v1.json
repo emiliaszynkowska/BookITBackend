@@ -1,0 +1,16 @@
+{
+  "title": "changeusername",
+  "type": "object",
+  "description": "Changes Username. Returns: true 200 / false 400",
+  "properties": {
+    "username": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    },
+    "newusername": {
+      "type": "string"
+    }
+  }
+}

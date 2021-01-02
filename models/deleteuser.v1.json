@@ -1,0 +1,10 @@
+{
+  "title": "deleteuser",
+  "type": "object",
+  "description": "Deletes User. Returns: true 200 / false 400",
+  "properties": {
+    "username": {
+      "type": "string"
+    }
+  }
+}

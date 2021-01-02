@@ -1,0 +1,19 @@
+{
+  "title": "register",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string"
+    },
+    "password": {
+      "type": "string"
+    }
+  },
+  "x-examples": {
+    "example-1": {
+      "username": "user",
+      "password": "password"
+    }
+  },
+  "description": "Add New User. Returns: true 200 / false 400"
+}
