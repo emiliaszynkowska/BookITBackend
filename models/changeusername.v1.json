@@ -1,7 +1,14 @@
 {
   "title": "changeusername",
   "type": "object",
-  "description": "Changes Username. Returns: true 200 / false 400",
+  "description": "Changes Username. Returns: true 200 / false 400\nhttps://europe-west2-bookit-297317.cloudfunctions.net/changeusername",
+  "x-examples": {
+    "example-1": {
+      "username": "user",
+      "password": "password",
+      "newusername": "string"
+    }
+  },
   "properties": {
     "username": {
       "type": "string"

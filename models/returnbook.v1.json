@@ -1,18 +1,18 @@
 {
-  "title": "login",
+  "title": "returnbook",
   "type": "object",
+  "description": "Deletes Loan. Returns: true 200 / false 400\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/returnbook",
   "x-examples": {
     "example-1": {
       "username": "user",
-      "password": "password"
+      "id": "12345"
     }
   },
-  "description": "Log In User. Returns: true 200 / false 400\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/login",
   "properties": {
     "username": {
       "type": "string"
     },
-    "password": {
+    "id": {
       "type": "string"
     }
   }

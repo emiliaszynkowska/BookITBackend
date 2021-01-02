@@ -1,0 +1,54 @@
+{
+  "description": "Searches Books. Returns: true 200 / false 400 + list of books\nNote: returns 'entries' number of books starting from index 'start'\nE.g. if entries = 10 and start = 10 it returns items 10 to 20\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/search",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string"
+    },
+    "entries": {
+      "type": "integer"
+    },
+    "start": {
+      "type": "integer"
+    },
+    "title": {
+      "type": "string"
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "issn": {
+      "type": "string"
+    },
+    "eissn": {
+      "type": "string"
+    },
+    "isbn": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "subjects": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "username",
+    "entries",
+    "start",
+    "id"
+  ]
+}

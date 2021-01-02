@@ -1,6 +1,13 @@
 {
   "title": "register",
   "type": "object",
+  "x-examples": {
+    "example-1": {
+      "username": "user",
+      "password": "password"
+    }
+  },
+  "description": "Add New User. Returns: true 200 / false 400\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/register",
   "properties": {
     "username": {
       "type": "string"
@@ -8,12 +15,5 @@
     "password": {
       "type": "string"
     }
-  },
-  "x-examples": {
-    "example-1": {
-      "username": "user",
-      "password": "password"
-    }
-  },
-  "description": "Add New User. Returns: true 200 / false 400"
+  }
 }

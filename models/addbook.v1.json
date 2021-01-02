@@ -1,0 +1,59 @@
+{
+  "title": "addbook",
+  "type": "object",
+  "description": "Adds New Book. Returns: true 200 / false 400\nNote: if a parameter is null its value must be empty string\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/addbook",
+  "x-examples": {
+    "example-1": {
+      "username": "user",
+      "title": "Book",
+      "publisher": "Publisher",
+      "location": "Location",
+      "issn": "45634575437",
+      "eissn": "",
+      "isbn": "",
+      "type": "Type",
+      "language": "English",
+      "subjects": "Subject",
+      "id": "12345",
+      "url": ""
+    }
+  },
+  "properties": {
+    "username": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string"
+    },
+    "publisher": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "issn": {
+      "type": "string"
+    },
+    "eissn": {
+      "type": "string"
+    },
+    "isbn": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string"
+    },
+    "language": {
+      "type": "string"
+    },
+    "subjects": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    }
+  }
+}
