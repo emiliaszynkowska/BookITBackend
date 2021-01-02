@@ -12,12 +12,12 @@ JWT_ALGORITHM = 'HS256'
 JWT_EXP_DELTA_SECONDS = 86400
 
 
-# Assuming a return is the opposite of a loan; will remove a loan instead of adding a return
 def search(request):
     # get the request data
     request_json = request.get_json()
     username = request_json["username"]
-    token = request_json["token"]
+    entries = request_json["entries"]
+    start = request_json["start"]
     title = request_json["title"]
     publisher = request_json["publisher"]
     location = request_json["location"]
@@ -32,7 +32,7 @@ def search(request):
 
     # authenticate request
     check_token = gen_token(username)
-    if True:  # check_token == token:
+    if checkuser(username) and isinstance(entries, int) and isinstance(start, int):  # check_token == token:
 
         # connect to bigquery
         client = bigquery.Client()
@@ -40,14 +40,41 @@ def search(request):
         table = client.get_table(table_id)
 
         # remove from loans
-        query = "SELECT * FROM `bookit-297317.dataset.books` WHERE Title='\"{}\"' OR Publisher='\"{}\"' OR Location='\"{}\"' OR ISSN='\"{}\"' OR eISSN='\"{}\"' OR ISBN='\"{}\"' OR Type='\"{}\"' OR Language='\"{}\"' OR Subjects='\"{}\"' OR ID='\"{}\"' OR URL='\"{}\"'".format(title, publisher, location, issn, eissn, isbn, type, language, subjects, id, url)
+        query = "SELECT * FROM `bookit-297317.dataset.books` WHERE Title LIKE \"{}\" OR Publisher LIKE \"{}\" OR Location LIKE \"{}\" OR ISSN LIKE \"{}\" OR eISSN LIKE \"{}\" OR ISBN LIKE \"{}\" OR Type LIKE \"{}\" OR Language LIKE \"{}\" OR Subjects LIKE \"{}\" OR ID=\"{}\" OR URL LIKE \"{}\"".format(
+            title if title != "" else "null", publisher if publisher != "" else "null",
+            location if location != "" else "null", issn if issn != "" else "null", eissn if eissn != "" else "null",
+            isbn if isbn != "" else "null", type if type != "" else "null", language if language != "" else "null",
+            subjects if subjects != "" else "null", id, url if url != "" else "null", entries, start)
         query_job = client.query(query)
         results = query_job.result().to_dataframe().to_json(orient="records")
 
         return {'success': True, 'message': results}, 200
 
     else:
-        return {'success': False, 'message': "Invalid Token"}, 400
+        if not checkuser(username):
+            return {'success': False, 'message': 'Invalid Username'}, 400
+        elif not isinstance(entries, int):
+            return {'success': False, 'message': 'Invalid Number Of Entries'}, 400
+        elif not isinstance(start, int):
+            return {'success': False, 'message': 'Invalid Start Index'}, 400
+
+
+def checkuser(username):
+    # connect to bigquery
+    userclient = bigquery.Client()
+    table_id = "bookit-297317.dataset.users"
+    table = userclient.get_table(table_id)
+
+    # read from users
+    query = "SELECT * FROM `bookit-297317.dataset.users` WHERE username='" + username + "'"
+    query_job = userclient.query(query)
+
+    # get result
+    results = query_job.result()
+    if len(list(results)) > 0:
+        return True
+    else:
+        return False
 
 
 def gen_token(username):
