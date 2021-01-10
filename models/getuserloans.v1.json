@@ -1,0 +1,15 @@
+{
+  "title": "getuserloans",
+  "type": "object",
+  "properties": {
+    "username": {
+      "type": "string"
+    }
+  },
+  "x-examples": {
+    "example-1": {
+      "username": "user"
+    }
+  },
+  "description": "Gets User Loans. Returns: true 200 / false 400 + list of books.\nNote: all books have an expiry of 1 month.\nURL: https://europe-west2-bookit-297317.cloudfunctions.net/getuserloans"
+}
